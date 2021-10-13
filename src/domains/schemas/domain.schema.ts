@@ -16,3 +16,9 @@ export class Domain {
 }
 
 export const DomainSchema = SchemaFactory.createForClass(Domain);
+// Exclude __v field if needed
+// DomainSchema.methods.toJSON = function () {
+//   const obj = this.toObject();
+//   delete obj.__v;
+//   return obj;
+// };

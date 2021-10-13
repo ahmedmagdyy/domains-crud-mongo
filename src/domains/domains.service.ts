@@ -29,7 +29,12 @@ export class DomainService {
     }
   }
 
-  async findAll(): Promise<DomainDTO[]> {
-    return this.domainModel.find().select('-_id -__v').exec();
+  async findAll(page = 0): Promise<DomainDTO[]> {
+    if (page >= 0) {
+      const skipRecordsCount = page * 10;
+      return this.domainModel.find().skip(skipRecordsCount).limit(10).exec();
+    } else {
+      throw new BadRequestException('Invalid value for page!');
+    }
   }
 }

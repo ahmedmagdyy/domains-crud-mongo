@@ -13,7 +13,7 @@ export class DomainController {
   }
 
   @Get()
-  async findAll(): Promise<DomainDTO[]> {
-    return this.domainsService.findAll();
+  async findAll(@Body('page') page: number): Promise<DomainDTO[]> {
+    return this.domainsService.findAll(page);
   }
 }
