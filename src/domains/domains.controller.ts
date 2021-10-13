@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { DomainService } from './domains.service';
 import { CreateDomainDto } from './dto/create-domain.dto';
 import { Domain } from './schemas/domain.schema';
@@ -31,5 +31,10 @@ export class DomainController {
     @Param('id') id: number,
   ): Promise<Domain[]> {
     return this.domainsService.getDomainsByOwnerId(id, page);
+  }
+
+  @Get('/search')
+  async searchDomains(@Query('q') q: string) {
+    return this.domainsService.performDomainFuzzySearch(q);
   }
 }

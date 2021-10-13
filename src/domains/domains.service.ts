@@ -28,9 +28,9 @@ export class DomainService {
     }
   }
 
-  async findAll(page = 0): Promise<Domain[]> {
-    if (page >= 0) {
-      const skipRecordsCount = page * 10;
+  async findAll(page = 1): Promise<Domain[]> {
+    if (page > 0) {
+      const skipRecordsCount = (page - 1) * 10;
       return this.domainModel.find().skip(skipRecordsCount).limit(10).exec();
     } else {
       throw new BadRequestException('Invalid value for page!');
@@ -54,12 +54,12 @@ export class DomainService {
     }
   }
 
-  async getDomainsByOwnerId(ownerId: number, page = 0): Promise<Domain[]> {
+  async getDomainsByOwnerId(ownerId: number, page = 1): Promise<Domain[]> {
     if (!ownerId) {
       throw new Error('ownerId is missing!');
     }
-    if (page >= 0) {
-      const skipRecordsCount = page * 10;
+    if (page > 0) {
+      const skipRecordsCount = (page - 1) * 10;
       return this.domainModel
         .find({
           ownerId,
@@ -70,5 +70,15 @@ export class DomainService {
     } else {
       throw new BadRequestException('Invalid value for page!');
     }
+  }
+
+  async performDomainFuzzySearch(searchQuery: string): Promise<Domain[]> {
+    const regex = new RegExp(this.escapeRegex(searchQuery), 'gi');
+    const domains = await this.domainModel.find({ domainName: regex });
+    return domains;
+  }
+
+  private escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
   }
 }
