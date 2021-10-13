@@ -1,19 +1,19 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { DomainService } from './domains.service';
 import { CreateDomainDto } from './dto/create-domain.dto';
-import { DomainDTO } from './dto/domain.dto';
+import { Domain } from './schemas/domain.schema';
 
 @Controller('domain')
 export class DomainController {
   constructor(private readonly domainsService: DomainService) {}
 
   @Post()
-  async create(@Body() createDomainDto: CreateDomainDto): Promise<DomainDTO> {
+  async create(@Body() createDomainDto: CreateDomainDto): Promise<Domain> {
     return this.domainsService.create(createDomainDto);
   }
 
   @Get()
-  async findAll(@Body('page') page: number): Promise<DomainDTO[]> {
+  async findAll(@Body('page') page: number): Promise<Domain[]> {
     return this.domainsService.findAll(page);
   }
 
@@ -21,7 +21,15 @@ export class DomainController {
   async updateDomainByDomainId(
     @Body('name') name: string,
     @Param('id') id: string,
-  ): Promise<DomainDTO> {
+  ): Promise<Domain> {
     return this.domainsService.updateById({ id, name });
+  }
+
+  @Get('/byOwner/:id')
+  async getDomainsByOwnerId(
+    @Body('page') page: number,
+    @Param('id') id: number,
+  ): Promise<Domain[]> {
+    return this.domainsService.getDomainsByOwnerId(id, page);
   }
 }
