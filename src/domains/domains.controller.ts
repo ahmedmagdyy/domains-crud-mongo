@@ -33,7 +33,7 @@ export class DomainController {
     return this.domainsService.getDomainsByOwnerId(id, page);
   }
 
-  @Get('/search')
+  @Post('/search')
   async searchDomains(@Query('q') q: string) {
     return this.domainsService.performDomainFuzzySearch(q);
   }
